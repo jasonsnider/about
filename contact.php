@@ -89,7 +89,7 @@ if(!empty($input)){
             'rule'=>'notEmpty',
             'message'=>'Please enter a subject'
         ]],
-        'body'=>[[
+        'message'=>[[
             'rule'=>'notEmpty',
             'message'=>'Please add a message'
         ]],
@@ -128,6 +128,12 @@ if(empty($valid->errors) && !empty($input)){
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
   </head>
   <body>
+
+    <nav>
+        <a href="index.html">Home</a> |
+        <a href="about.html">About</a> |
+        <a href="contact.php">Contact</a>
+    </nav>
 
     <?php if(empty($valid->errors) && !empty($input)): ?>
       <div>Success!</div>
