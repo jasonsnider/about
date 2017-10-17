@@ -2,7 +2,7 @@
 # Include the Autoloader (see "Libraries" for install instructions)
 require 'vendor/autoload.php';
 use Mailgun\Mailgun;
-require '/var/www/conf/keys.php';
+require '/var/www/about/config/keys.php';
 
 $mgClient = new Mailgun(MG_KEY);
 $domain = MG_DOMAIN;
