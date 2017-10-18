@@ -22,11 +22,18 @@ body {
   display: table;
   clear: both; }
 
+.row {
+  display: flex; }
+  .row:after {
+    content: "";
+    display: table;
+    clear: both; }
+
 /* All columns should float to the left */
 .col {
   float: left;
-  min-height: 300px;
-  padding: 1em; }
+  padding: 1em;
+  flex: 1; }
 
 .pull-left {
   float: left; }

@@ -1,71 +1,20 @@
 <?php
-# Include the Autoloader (see "Libraries" for install instructions)
+// Include the Autoloader for Composer
 require 'vendor/autoload.php';
-use Mailgun\Mailgun;
-require '/var/www/about/config/keys.php';
 
+// Include non-vendor files
+require 'core/About/src/Validation/Validate.php';
+require 'config/keys.php';
+
+//Declare Namespaces
+use Mailgun\Mailgun;
+
+//Mailgun Declarations
 $mgClient = new Mailgun(MG_KEY);
 $domain = MG_DOMAIN;
 
-class Validate{
-
-    public $validation = [];
-
-    public $errors = [];
-
-    private $data = [];
-
-    public function notEmpty($value){
-
-        if(!empty($value)){
-            return true;
-        }
-
-        return false;
-
-    }
-
-    public function email($value){
-
-        if(filter_var($value, FILTER_VALIDATE_EMAIL)){
-            return true;
-        }
-
-        return false;
-
-    }
-
-    public function check($data){
-
-        $this->data = $data;
-
-        foreach(array_keys($this->validation) as $fieldName){
-
-            $this->rules($fieldName);
-        }
-
-    }
-
-    public function rules($field){
-        foreach($this->validation[$field] as $rule){
-            if($this->{$rule['rule']}($this->data[$field]) === false){
-                $this->errors[$field] = $rule;
-            }
-        }
-    }
-
-    public function error($field){
-        if(!empty($this->errors[$field])){
-            return $this->errors[$field]['message'];
-        }
-
-        return false;
-    }
-
-}
-
-$valid = new Validate();
-
+//Validate Declarations
+$valid = new About\Validation\Validate();
 $input = filter_input_array(INPUT_POST);
 if(!empty($input)){
 
@@ -106,7 +55,7 @@ if(empty($valid->errors) && !empty($input)){
     $to = "Jason Snider <jason@jasonsnider.com>";
     $subject = "Contact Form: {$input['subject']}";
     $text = "{$input['first_name']}  {$input['last_name']} <{$input['email']}>"
-        . "\n{$input['subject']}\n{$input['body']}>";
+        . "\n{$input['subject']}\n{$input['message']}>";
 
     $result = $mgClient->sendMessage(
       $domain,
@@ -119,63 +68,85 @@ if(empty($valid->errors) && !empty($input)){
 }
 
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <title>Single Page App with a Validation Class</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta charset="UTF-8">
+      <title>About Jason Snider</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="stylesheet" type="text/css" href="css/dist/main.css">
   </head>
+
   <body>
+      
+      <div id="Wrapper">
+          <nav class="top-nav">
+              <a href="index.html" class="pull-left" href="/">Site Logo</a>
+              <ul role="navigation">
+                  <li><a href="index.html">Home</a></li>
+                  <li><a href="about.html">About</a></li>
+                  <li><a href="contact.php">Contact</a></li>
+              </ul>
+          </nav>
 
-    <nav>
-        <a href="index.html">Home</a> |
-        <a href="about.html">About</a> |
-        <a href="contact.php">Contact</a>
-    </nav>
+          <div class="row">
+              <div id="Content" class="col">
 
-    <?php if(empty($valid->errors) && !empty($input)): ?>
-      <div>Success!</div>
-    <?php else: ?>
-      <div>You page has errors.</div>
-    <?php endif; ?>
+                  <?php if(empty($valid->errors) && !empty($input)): ?>
+                    <div>Success!</div>
+                  <?php else: ?>
+                    <div>You page has errors.</div>
+                  <?php endif; ?>
 
-    <form method="post" action="contact.php">
+                  <form method="post" action="contact.php">
 
-      <div>
-        <label for="firstName">First Name</label><br>
-        <input type="text" name="first_name" id="firstName">
-        <div style="color: #ff0000;"><?php echo $valid->error('first_name'); ?></div>
+                    <div>
+                      <label for="firstName">First Name</label><br>
+                      <input type="text" name="first_name" id="firstName" value="<?php echo $valid->userInput('first_name'); ?>">
+                      <div style="color: #ff0000;"><?php echo $valid->error('first_name'); ?></div>
+                    </div>
+
+                    <div>
+                      <label for="lastName" id="lastName">Last Name</label><br>
+                      <input type="text" name="last_name" value="<?php echo $valid->userInput('last_name'); ?>">
+                      <div style="color: #ff0000;"><?php echo $valid->error('last_name'); ?></div>
+                    </div>
+
+                    <div>
+                      <label for="email" id="email">Email</label><br>
+                      <input type="text" name="email" value="<?php echo $valid->userInput('email'); ?>">
+                      <div style="color: #ff0000;"><?php echo $valid->error('email'); ?></div>
+                    </div>
+
+                    <div>
+                      <label for="subject" id="subject">Subject</label><br>
+                      <input type="text" name="subject" value="<?php echo $valid->userInput('subject'); ?>">
+                      <div style="color: #ff0000;"><?php echo $valid->error('subject'); ?></div>
+                    </div>
+
+                    <div>
+                      <label for="message" id="message">Message</label><br>
+                      <textarea name="message"><?php echo $valid->userInput('message'); ?></textarea>
+                      <div style="color: #ff0000;"><?php echo $valid->error('message'); ?></div>
+                    </div>
+
+
+                    <input type="submit">
+
+                  </form>
+              </div>
+              <div id="Sidebar" class="col"></div>
+          </div>
+
+          <div id="Footer" class="clearfix">
+              <small>&copy; 2017 - MyAwesomeSite.com</small>
+              <ul role="navigation">
+                  <li><a href="terms.html">Terms</a></li>
+                  <li><a href="privacy.html">Privacy</a></li>
+              </ul>
+          </div>
       </div>
 
-      <div>
-        <label for="lastName" id="lastName">Last Name</label><br>
-        <input type="text" name="last_name">
-        <div style="color: #ff0000;"><?php echo $valid->error('last_name'); ?></div>
-      </div>
-
-      <div>
-        <label for="email" id="email">Email</label><br>
-        <input type="text" name="email">
-        <div style="color: #ff0000;"><?php echo $valid->error('email'); ?></div>
-      </div>
-
-      <div>
-        <label for="subject" id="subject">Subject</label><br>
-        <input type="text" name="subject">
-        <div style="color: #ff0000;"><?php echo $valid->error('subject'); ?></div>
-      </div>
-
-      <div>
-        <label for="message" id="message">Message</label><br>
-        <textarea name="message"></textarea>
-        <div style="color: #ff0000;"><?php echo $valid->error('message'); ?></div>
-      </div>
-
-
-      <input type="submit">
-
-    </form>
   </body>
+
 </html>
