@@ -30,16 +30,48 @@ body {
     clear: both; }
 
 /* All columns should float to the left */
-.col {
+.col, #Sidebar, #Content {
   float: left;
   padding: 1em;
-  flex: 1; }
+  /* All columns should have the same height but allow for different widths */
+  flex: 1 1 auto; }
 
 .pull-left {
   float: left; }
 
 .pull-right, .top-nav ul[role="navigation"], #Footer ul[role="navigation"] {
   float: right; }
+
+.img-circle {
+  border-radius: 50%; }
+
+.text-success {
+  color: #3c763d; }
+
+.text-error {
+  color: #a94442; }
+
+.text-warning {
+  color: #8a6d3b; }
+
+.message, .success, .error, .warning {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px;
+  margin: 0 0 1em;
+  color: #333; }
+
+.success {
+  border-color: #3c763d;
+  color: #3c763d; }
+
+.error {
+  border-color: #a94442;
+  color: #a94442; }
+
+.warning {
+  border-color: #8a6d3b;
+  color: #8a6d3b; }
 
 /* Reset list elements for navigation */
 ul.nav-inline, .top-nav ul[role="navigation"], #Footer ul[role="navigation"] {
@@ -99,12 +131,12 @@ nav.top-nav a,
 
 /* The left and right columns will have the same width */
 #Sidebar {
-  width: 440px;
+  width: 340px;
   background: #cdcdcd; }
 
 /* The middle column will have a fixed width of the remainder of the wrapper */
 #Content {
-  width: 730px;
+  width: 830px;
   background: #fff; }
 
 #Footer {
@@ -116,5 +148,14 @@ nav.top-nav a,
     content: "";
     display: table;
     clear: both; }
+
+#AboutMe {
+  text-align: center; }
+
+#AboutMe > .header {
+  display: block;
+  font-weight: bold;
+  color: #ff9900;
+  margin: 0 0 1em; }
 
 /*# sourceMappingURL=main.css.map */

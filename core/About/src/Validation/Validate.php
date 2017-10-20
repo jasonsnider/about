@@ -38,7 +38,6 @@ class Validate{
 
             $this->rules($fieldName);
         }
-
     }
 
     public function rules($field){
@@ -46,6 +45,11 @@ class Validate{
             if($this->{$rule['rule']}($this->data[$field]) === false){
                 $this->errors[$field] = $rule;
             }
+        }
+
+        //Make sure the array is empty if no errosrs are detected.
+        if(count($this->errors) == 0){
+            $this->errors = [];
         }
     }
 

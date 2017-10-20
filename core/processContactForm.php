@@ -6,10 +6,15 @@ require 'vendor/autoload.php';
 require 'core/About/src/Validation/Validate.php';
 require 'config/keys.php';
 
-//Declare Namespaces
+// You could declare the About namespace with the class name here so you don't have to type it later.
+//use About\Validation\Validate;
+
+//Declare Mailgu/Mailgun
 use Mailgun\Mailgun;
 
 //Mailgun Declarations
+// With out the namespace declaration above this would be
+// $mgClient = new Mailgun\Mailgun(MG_KEY);
 $mgClient = new Mailgun(MG_KEY);
 $domain = MG_DOMAIN;
 
@@ -68,7 +73,7 @@ if(empty($valid->errors) && !empty($input)){
 }
 
 if(empty($valid->errors) && !empty($input)){
-    $message = "<div>Success!</div>";
+    $message = "<div class=\"success\">Success!</div>";
 }else{
-    $message = "<div>Error!</div>";
+    $message = "<div class=\"error\">Error!</div>";
 }
